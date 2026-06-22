@@ -45,6 +45,15 @@ public class QuantityMeasurementApp {
             return Math.round(convertedValue * 1000.0) / 1000.0;
         }
 
+        public Quantity add(Quantity other) {
+            if (other == null) {
+                throw new IllegalArgumentException("Quantity to add cannot be null");
+            }
+            double otherConvertedValue = other.convertTo(this.unit);
+            double sumValue = this.value + otherConvertedValue;
+            return new Quantity(Math.round(sumValue * 1000.0) / 1000.0, this.unit);
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (this == obj) return true;

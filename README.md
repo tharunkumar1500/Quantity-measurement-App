@@ -1,14 +1,14 @@
-# Quantity Measurement Application (UC5) - Unit-to-Unit Conversion
+# Quantity Measurement Application (UC6) - Addition of Two Length Units
 
-This project implements the fifth use case of the Quantity Measurement Application. Building upon the previous use cases, it introduces a robust unit-to-unit conversion API. Clients can now convert numeric values seamlessly between Length units while handling precision and validation accurately.
+This project implements the sixth use case of the Quantity Measurement Application. Building upon the previous use cases, it introduces the ability to perform arithmetic operations, specifically adding two length measurements of potentially different units, and returning the result in the unit of the first operand.
 
 ## Features
 - **Generic Quantity Class**: A unified `Quantity` class to represent any measurement with a value and a unit type.
 - **Extended Unit Support**: The `LengthUnit` Enum supports `FEET`, `INCHES`, `YARD`, and `CM`.
-- **Unit Conversion API**: Introduces `convertTo(LengthUnit targetUnit)` to explicitly convert a given measurement to any other supported unit and retrieve the numeric value.
+- **Unit Conversion API**: Includes `convertTo(LengthUnit targetUnit)` for explicit conversions.
+- **Arithmetic Operations (Addition)**: Introduces the `add(Quantity other)` method to seamlessly add two units (e.g., Feet + Inches) and return a new immutable `Quantity` object.
 - **Robust Validation**: Rejects invalid states like `null` units, `NaN` values, and `Infinite` values via `IllegalArgumentException`.
-- **Precise Cross-Unit Equality Check**: Accurately compares measurements across different unit types using precision base-unit conversion logic.
-- **Comprehensive Testing**: JUnit 5 tests verifying equality, inequality, cross-unit comparison, conversions, and invalid-input exception handling.
+- **Comprehensive Testing**: JUnit 5 tests verifying equality, cross-unit comparison, conversions, valid/invalid additions, and exception handling.
 
 ## Prerequisites
 - Java Development Kit (JDK) 11 or higher
@@ -32,8 +32,8 @@ mvn exec:java -Dexec.mainClass="quantitymeasurement.QuantityMeasurementApp"
 ```
 --- Generic Quantity Equality ---
 Quantity(1.0, "feet") equals Quantity(1.0, "feet"): true
-Quantity(1.0, "feet") equals Quantity(2.0, "feet"): false
 Quantity(1.0, "feet") equals Quantity(12.0, "inches"): true
+Quantity(2.0, "inches") + Quantity(2.54, "cm") = Quantity(3.0, "inches")
 ```
 
 ## Code Explanation
@@ -43,17 +43,15 @@ Contains the `LengthUnit` Enum and `Quantity` class with the following:
 - `LengthUnit`: Manages the conversion factor relative to the base unit for Feet, Inches, Yards, and CM.
 - `Quantity` constructor: Validates inputs (throws `IllegalArgumentException` on NaN, Infinity, or null unit).
 - `Quantity.convertTo(LengthUnit targetUnit)`: Converts the measurement to the specified target unit and returns the precise `double` numeric value.
+- `Quantity.add(Quantity other)`: Adds two different length measurements by internally using `convertTo` and returning a new immutable `Quantity` object representing the sum.
 - `Quantity.equals(Object obj)` method: Handles references, null checks, type checks, and precise floating-point comparison using base unit conversion logic.
 
 ### `QuantityMeasurementTest.java`
 JUnit 5 tests verifying:
+- **Addition Tests (UC6)**: Tests explicit summation logic across various units:
+  - 2 Inches + 2 Inches -> 4.0 Inches
+  - 1 Foot + 2 Inches -> 14.0 Inches (if evaluated relative to inches)
+  - 2 Inches + 2.54 CM -> 3.0 Inches
 - **Validation Tests**: Ensures constructors and methods reject invalid states (`null`, `NaN`, `Infinity`).
-- **Conversion Tests**: Tests explicit numeric conversion:
-  - 1 Foot to Inches -> 12.0
-  - 36 Inches to Yards -> 1.0
-  - 1 Inch to CM -> 2.54
-  - 2 Yards to Feet -> 6.0
-  - 1 Yard to CM -> 91.44
-- **Base Equality Tests**: Basic comparison between identical units.
-- **Same Unit Checks**: Validating unit-to-unit comparison.
-- **Cross Unit Checks**: Validating cross-unit comparisons across all 4 units.
+- **Conversion Tests**: Tests explicit numeric conversion (e.g., 1 Yard to CM -> 91.44).
+- **Base Equality & Cross-Unit Checks**: Validating comparison logic across all 4 units.
