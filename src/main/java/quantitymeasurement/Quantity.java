@@ -27,7 +27,30 @@ public class Quantity<U extends IMeasurable> {
     }
 
     public Quantity<U> add(Quantity<U> other) {
-        return this.add(other, this.unit);
+        return add(other, this.unit);
+    }
+
+    public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
+        double thisBaseValue = this.unit.convertToBaseUnit(this.value);
+        double otherBaseValue = other.unit.convertToBaseUnit(other.value);
+        double resultBaseValue = thisBaseValue - otherBaseValue;
+        double resultInTargetUnit = targetUnit.convertFromBaseUnit(resultBaseValue);
+        // Rounding to 3 decimal places to avoid floating point precision issues
+        resultInTargetUnit = Math.round(resultInTargetUnit * 1000.0) / 1000.0;
+        return new Quantity<>(resultInTargetUnit, targetUnit);
+    }
+
+    public Quantity<U> subtract(Quantity<U> other) {
+        return subtract(other, this.unit);
+    }
+
+    public double divide(Quantity<U> other) {
+        if (other.value == 0.0) {
+            throw new IllegalArgumentException("Cannot divide by zero quantity.");
+        }
+        double thisBaseValue = this.unit.convertToBaseUnit(this.value);
+        double otherBaseValue = other.unit.convertToBaseUnit(other.value);
+        return thisBaseValue / otherBaseValue;
     }
 
     public Quantity<U> add(Quantity<U> other, U targetUnit) {

@@ -362,4 +362,53 @@ public class QuantityMeasurementTest {
         Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
         assertNotEquals(l1, kg1);
     }
+
+    // --- Arithmetic Tests (Subtraction and Division) (UC12) ---
+
+    @Test
+    public void givenFiveLitresAndTwoLitres_ShouldReturnThreeLitres_OnSubtraction() {
+        Quantity<VolumeUnit> l1 = new Quantity<>(5.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> l2 = new Quantity<>(2.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> diff = l1.subtract(l2);
+        assertEquals(new Quantity<>(3.0, VolumeUnit.LITRE), diff);
+    }
+
+    @Test
+    public void givenTenFeetAndSixInches_ShouldReturnNinePointFiveFeet_OnSubtraction() {
+        Quantity<LengthUnit> f1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(6.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> diff = f1.subtract(i1);
+        assertEquals(new Quantity<>(9.5, LengthUnit.FEET), diff);
+    }
+
+    @Test
+    public void givenOneKilogramAndFiveHundredGrams_ShouldReturnZeroPointFiveKilograms_OnSubtraction() {
+        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> g1 = new Quantity<>(500.0, WeightUnit.GRAM);
+        Quantity<WeightUnit> diff = kg1.subtract(g1);
+        assertEquals(new Quantity<>(0.5, WeightUnit.KILOGRAM), diff);
+    }
+
+    @Test
+    public void givenTenKilogramsAndFiveKilograms_ShouldReturnTwo_OnDivision() {
+        Quantity<WeightUnit> kg1 = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> kg2 = new Quantity<>(5.0, WeightUnit.KILOGRAM);
+        double result = kg1.divide(kg2);
+        assertEquals(2.0, result, 0.001);
+    }
+
+    @Test
+    public void givenOneGallonAndThreePointSevenEightLitres_ShouldReturnApproxOne_OnDivision() {
+        Quantity<VolumeUnit> gal1 = new Quantity<>(1.0, VolumeUnit.GALLON);
+        Quantity<VolumeUnit> l1 = new Quantity<>(3.78541, VolumeUnit.LITRE);
+        double result = gal1.divide(l1);
+        assertEquals(1.0, result, 0.001);
+    }
+
+    @Test
+    public void givenQuantityDividedByZero_ShouldThrowException() {
+        Quantity<LengthUnit> f1 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> zeroLength = new Quantity<>(0.0, LengthUnit.FEET);
+        assertThrows(IllegalArgumentException.class, () -> f1.divide(zeroLength));
+    }
 }

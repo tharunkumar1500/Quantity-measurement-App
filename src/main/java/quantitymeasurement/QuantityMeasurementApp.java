@@ -11,6 +11,16 @@ public class QuantityMeasurementApp {
         System.out.println(q1 + " + " + q2 + " to " + targetUnit.getUnitName() + " = " + sum);
     }
 
+    public static <U extends IMeasurable> void demonstrateSubtraction(Quantity<U> q1, Quantity<U> q2, U targetUnit) {
+        Quantity<U> diff = q1.subtract(q2, targetUnit);
+        System.out.println(q1 + " - " + q2 + " to " + targetUnit.getUnitName() + " = " + diff);
+    }
+
+    public static <U extends IMeasurable> void demonstrateDivision(Quantity<U> q1, Quantity<U> q2) {
+        double result = q1.divide(q2);
+        System.out.println(q1 + " / " + q2 + " = " + result);
+    }
+
     public static void main(String[] args) {
         System.out.println("Welcome to Quantity Measurement App!");
         
@@ -40,5 +50,14 @@ public class QuantityMeasurementApp {
         Quantity<VolumeUnit> gal1 = new Quantity<>(1.0, VolumeUnit.GALLON);
         Quantity<VolumeUnit> l2 = new Quantity<>(3.785, VolumeUnit.LITRE);
         demonstrateAddition(gal1, l2, VolumeUnit.GALLON);
+
+        System.out.println("\n--- Subtraction & Division (UC12) ---");
+        Quantity<LengthUnit> f2 = new Quantity<>(10.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i3 = new Quantity<>(6.0, LengthUnit.INCHES);
+        demonstrateSubtraction(f2, i3, LengthUnit.FEET);
+
+        Quantity<WeightUnit> kg2 = new Quantity<>(10.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> kg3 = new Quantity<>(5.0, WeightUnit.KILOGRAM);
+        demonstrateDivision(kg2, kg3);
     }
 }
