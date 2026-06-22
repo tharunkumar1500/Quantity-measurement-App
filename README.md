@@ -1,30 +1,25 @@
-# UC16: Database Integration and Maven Standardization
+# UC17: Isolated Layer Testing with Mockito
 
 ## Overview
-This branch (`feature/uc16-database-integration`) focuses strictly on integrating a relational database to persist quantity measurements and standardizing the project into a professional Maven directory structure.
+This branch (`feature/uc17-layer-testing`) focuses on enforcing N-Tier architectural testing standards. It ensures that the Controller and Service layers can be tested completely in isolation from the actual database utilizing Mockito.
 
-## Features Implemented in UC16
+## Features Implemented in UC17
 
-1. **Standard Maven Structure**: 
-   - Relocated all source code to `src/main/java/com/app/quantitymeasurement`.
-   - Relocated all test files to `src/test/java/com/app/quantitymeasurement`.
+1. **Mockito Integration**:
+   - Integrated Mockito framework to create mock instances of dependencies.
+   - Used `@ExtendWith(MockitoExtension.class)`, `@Mock`, and `@InjectMocks` annotations for clean test dependency injection.
 
-2. **H2 Database Integration**:
-   - Implemented `QuantityMeasurementDatabaseRepository` which securely executes standard JDBC `PreparedStatement`s to insert and retrieve mathematical operations.
-   - Designed a Singleton `ConnectionPool.java` to handle JDBC connections dynamically, including validation, timeout, and connection release logic.
-   - Introduced `schema.sql` to automatically initialize the `quantity_measurement_history` table at runtime.
+2. **Isolated Service Layer Testing (`QuantityMeasurementServiceTest.java`)**:
+   - Mocked the `IQuantityMeasurementRepository` layer to prevent actual database hits during business logic verification.
+   - Tested arithmetic logic, comparisons, unit constraints (e.g. attempting to compare Length with Weight), and ensured the service correctly interacts with the mock repository (`repository.save()`).
 
-3. **Application Configuration**:
-   - Added `application.properties` to manage the database connection details.
-   - Included a toggle to dynamically switch between `DATABASE` persistence and `CACHE` persistence.
+3. **Isolated Controller Layer Testing (`QuantityMeasurementControllerTest.java`)**:
+   - Mocked the `IQuantityMeasurementService` layer to isolate the entry-point execution.
+   - Verified that the controller successfully unpacks the DTOs and delegates the calculations to the Service layer securely using `verify(service, times(1))`.
 
-4. **SLF4J Logging Framework**:
-   - Replaced all legacy `System.out.println()` logs with SLF4J (`logger.info`, `logger.error`, etc.) paired with `logback-classic`.
-
-5. **Testing & Verification**:
-   - Implemented `QuantityMeasurementDatabaseRepositoryTest` for isolated JDBC testing.
-   - Implemented `QuantityMeasurementIntegrationTest` for end-to-end verifications.
-   - All tests pass via Maven.
+4. **Testing Verification**:
+   - Running the test suite safely ignores actual database constraints and connections for the mocked layers, significantly improving test speed and reliability.
+   - Combined with previous integration tests, the suite now successfully executes **79 automated tests**.
 
 ## Running the Code
 
