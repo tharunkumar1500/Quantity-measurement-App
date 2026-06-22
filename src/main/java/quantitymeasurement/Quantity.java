@@ -26,14 +26,49 @@ public class Quantity<U extends IMeasurable> {
         return Math.round(convertedValue * 1000.0) / 1000.0;
     }
 
+    private enum ArithmeticOperation {
+        ADD, SUBTRACT, DIVIDE
+    }
+
+    private double performOperation(Quantity<U> other, ArithmeticOperation operation) {
+        if (operation == ArithmeticOperation.DIVIDE && other.value == 0.0) {
+            throw new IllegalArgumentException("Cannot divide by zero quantity.");
+        }
+        double thisBaseValue = this.unit.convertToBaseUnit(this.value);
+        double otherBaseValue = other.unit.convertToBaseUnit(other.value);
+
+        switch (operation) {
+            case ADD:
+                return thisBaseValue + otherBaseValue;
+            case SUBTRACT:
+                return thisBaseValue - otherBaseValue;
+            case DIVIDE:
+                return thisBaseValue / otherBaseValue;
+            default:
+                throw new UnsupportedOperationException("Unknown operation");
+        }
+    }
+
+    public Quantity<U> add(Quantity<U> other, U targetUnit) {
+        if (other == null) {
+            throw new IllegalArgumentException("Quantity to add cannot be null");
+        }
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("Target unit cannot be null");
+        }
+        double resultBaseValue = performOperation(other, ArithmeticOperation.ADD);
+        double resultInTargetUnit = targetUnit.convertFromBaseUnit(resultBaseValue);
+        // Rounding to 3 decimal places to avoid floating point precision issues
+        resultInTargetUnit = Math.round(resultInTargetUnit * 1000.0) / 1000.0;
+        return new Quantity<>(resultInTargetUnit, targetUnit);
+    }
+
     public Quantity<U> add(Quantity<U> other) {
         return add(other, this.unit);
     }
 
     public Quantity<U> subtract(Quantity<U> other, U targetUnit) {
-        double thisBaseValue = this.unit.convertToBaseUnit(this.value);
-        double otherBaseValue = other.unit.convertToBaseUnit(other.value);
-        double resultBaseValue = thisBaseValue - otherBaseValue;
+        double resultBaseValue = performOperation(other, ArithmeticOperation.SUBTRACT);
         double resultInTargetUnit = targetUnit.convertFromBaseUnit(resultBaseValue);
         // Rounding to 3 decimal places to avoid floating point precision issues
         resultInTargetUnit = Math.round(resultInTargetUnit * 1000.0) / 1000.0;
@@ -45,25 +80,7 @@ public class Quantity<U extends IMeasurable> {
     }
 
     public double divide(Quantity<U> other) {
-        if (other.value == 0.0) {
-            throw new IllegalArgumentException("Cannot divide by zero quantity.");
-        }
-        double thisBaseValue = this.unit.convertToBaseUnit(this.value);
-        double otherBaseValue = other.unit.convertToBaseUnit(other.value);
-        return thisBaseValue / otherBaseValue;
-    }
-
-    public Quantity<U> add(Quantity<U> other, U targetUnit) {
-        if (other == null) {
-            throw new IllegalArgumentException("Quantity to add cannot be null");
-        }
-        if (targetUnit == null) {
-            throw new IllegalArgumentException("Target unit cannot be null");
-        }
-        double thisConvertedValue = this.convertTo(targetUnit);
-        double otherConvertedValue = other.convertTo(targetUnit);
-        double sumValue = thisConvertedValue + otherConvertedValue;
-        return new Quantity<>(Math.round(sumValue * 1000.0) / 1000.0, targetUnit);
+        return performOperation(other, ArithmeticOperation.DIVIDE);
     }
 
     @Override

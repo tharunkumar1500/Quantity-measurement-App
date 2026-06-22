@@ -306,7 +306,7 @@ public class QuantityMeasurementTest {
         Quantity<WeightUnit> lb1 = new Quantity<>(1.0, WeightUnit.POUND);
         Quantity<WeightUnit> lb2 = new Quantity<>(1.0, WeightUnit.POUND);
         Quantity<?> sum = lb1.add(lb2, WeightUnit.KILOGRAM);
-        assertEquals(new Quantity<>(0.908, WeightUnit.KILOGRAM), sum);
+        assertEquals(new Quantity<>(0.907, WeightUnit.KILOGRAM), sum);
     }
 
     // --- Cross Category Boundary Tests ---

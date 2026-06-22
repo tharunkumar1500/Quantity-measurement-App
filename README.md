@@ -1,6 +1,6 @@
-# Quantity Measurement Application (UC12) - Subtraction and Division Operations
+# Quantity Measurement Application (UC13) - Centralized Arithmetic Logic (DRY)
 
-This project implements the twelfth use case of the Quantity Measurement Application. It expands the generic `Quantity<U>` class to support full arithmetic capabilities by adding **Subtraction** and **Division** operations, securely functioning across all measurement categories (Length, Weight, and Volume).
+This project implements the thirteenth use case of the Quantity Measurement Application. It refactors the arithmetic operations (Addition, Subtraction, Division) in the generic `Quantity<U>` class to eliminate duplicate code by introducing a centralized, DRY (Don't Repeat Yourself) helper method.
 
 ## Features
 - **Generic Unit Interface**: `IMeasurable` is an interface standardizing conversion behaviors across categories.
@@ -9,10 +9,11 @@ This project implements the twelfth use case of the Quantity Measurement Applica
   - `WeightUnit` implements `IMeasurable` and supports `KILOGRAM`, `GRAM`, and `POUND`.
   - `VolumeUnit` implements `IMeasurable` and supports `LITRE`, `MILLILITRE`, and `GALLON`.
 - **Compile-Time Category Safety**: The `Quantity<U>` class is strictly parameterized. Attempts to mix categories (e.g. `LengthUnit` + `VolumeUnit`) will fail to compile. This replaces error-prone runtime checks.
-- **Arithmetic Operations**: 
+- **Centralized Arithmetic Operations (DRY)**: 
   - `add(...)`: Sums two quantities of the same category, returning a `Quantity<U>`.
   - `subtract(...)`: Finds the difference between two quantities of the same category, returning a `Quantity<U>`.
   - `divide(...)`: Computes the ratio between two quantities of the same category, returning a dimensionless scalar `double`.
+  - Under the hood, these methods delegate validation and base unit conversion to a private helper `performOperation`, dramatically reducing boilerplate.
 - **Robust Validation**: Rejects invalid states like `null` units, `NaN` values, and `Infinite` values via `IllegalArgumentException`. Division by zero explicitly throws an exception.
 - **Comprehensive Testing**: JUnit 5 tests utilizing generic parameters to verify equality, conversions, arithmetic (add, subtract, divide), and isolated category tests for Length, Weight, and Volume.
 
@@ -44,7 +45,7 @@ Quantity(1.0, "kilogram") equals Quantity(1000.0, "gram"): true
 
 --- Generic Quantity Addition ---
 Quantity(2.0, "inches") + Quantity(2.54, "cm") to inches = Quantity(3.0, "inches")
-Quantity(1.0, "pound") + Quantity(1.0, "pound") to kilogram = Quantity(0.908, "kilogram")
+Quantity(1.0, "pound") + Quantity(1.0, "pound") to kilogram = Quantity(0.907, "kilogram")
 
 --- Volume Demonstration (UC11) ---
 Quantity(1.0, "litre") equals Quantity(1000.0, "millilitre"): true
@@ -67,13 +68,14 @@ Standalone Enums managing measurement units securely via internal factors, seaml
 A standalone Class representing the parameterized mathematical model:
 - `Quantity` constructor: Validates inputs.
 - `convertTo(U targetUnit)`: Delegates base unit arithmetic. 
-- `add(...)`, `subtract(...)`, `divide(...)`: Generic arithmetic methods with strictly identical parameters. Add/Subtract return `Quantity<U>`, Divide returns `double`.
+- `performOperation`: Private helper method that standardizes validations, unifies base conversions, and evaluates logic based on a private `ArithmeticOperation` enum.
+- `add(...)`, `subtract(...)`, `divide(...)`: Generic arithmetic methods wrapping `performOperation`.
 - `equals(Object obj)` method: Handles runtime type checks. Generic bounds block statically invalid comparisons but it maintains logic for raw objects.
 
 ### `QuantityMeasurementTest.java`
 JUnit 5 tests verifying:
 - **Refactored Generic APIs**: Validates strict compilation and safe test instantiation.
-- **Arithmetic Tests (UC12)**: Validates subtraction and division logic across various units and boundary cases like division by zero.
+- **Arithmetic Tests (UC12/13)**: Validates subtraction and division logic across various units and boundary cases like division by zero.
 - **Volume Tests (UC11)**: Validates equality, conversion, and addition across L, mL, and Gal.
 - **Weight Tests (UC9)**: Validates equality, conversion, and addition across Kg, G, and Lbs.
 - **Cross Category Boundary Tests (UC10 & UC11)**: Negative equality comparisons (Length != Weight, Volume != Weight).
