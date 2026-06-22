@@ -1,63 +1,39 @@
-# Quantity Measurement App (UC1 - UC16)
+# UC16: Database Integration and Maven Standardization
 
-The Quantity Measurement App is a robust, N-Tier Java application designed to cleanly and safely measure, compare, and perform arithmetic operations across multiple distinct quantities. It enforces rigid domain boundaries for Length, Weight, Volume, and Temperature, while allowing flexible conversions within a domain.
+## Overview
+This branch (`feature/uc16-database-integration`) focuses strictly on integrating a relational database to persist quantity measurements and standardizing the project into a professional Maven directory structure.
 
-## Features
+## Features Implemented in UC16
 
-### UC1 - UC14: Core Domain Logic & Units
-- **Length**: Supports Inches, Feet, Yards, and Centimeters.
-- **Weight/Mass**: Supports Grams, Kilograms, and Tonnes.
-- **Volume**: Supports Liters, Milliliters, and Gallons.
-- **Temperature**: Supports Celsius and Fahrenheit (including complex formula-based bidirectional conversion).
-- **Arithmetic Operations**: Addition, Subtraction, and Division are supported for compatible units.
-- **Operational Safety**: Compile-time category safety prevents adding Length to Weight. Runtime validations prevent arithmetic on Temperature objects (which throws `UnsupportedOperationException`).
+1. **Standard Maven Structure**: 
+   - Relocated all source code to `src/main/java/com/app/quantitymeasurement`.
+   - Relocated all test files to `src/test/java/com/app/quantitymeasurement`.
 
-## UC15: N-Tier Architecture Refactoring
-The application underwent a major structural refactor to adopt a professional, layered architecture:
-- **Controller Layer (`QuantityMeasurementController`)**: Exposes methods for interaction and orchestration.
-- **Service Layer (`IQuantityMeasurementService`)**: Implements business rules, cross-category validations, and mathematical delegations.
-- **Repository Layer (`IQuantityMeasurementRepository`)**: Abstraction for data persistence.
-- **Entity/Model Layer (`QuantityMeasurementEntity`)**: Dedicated POJOs and DTOs to encapsulate the state of a measurement operation.
+2. **H2 Database Integration**:
+   - Implemented `QuantityMeasurementDatabaseRepository` which securely executes standard JDBC `PreparedStatement`s to insert and retrieve mathematical operations.
+   - Designed a Singleton `ConnectionPool.java` to handle JDBC connections dynamically, including validation, timeout, and connection release logic.
+   - Introduced `schema.sql` to automatically initialize the `quantity_measurement_history` table at runtime.
 
-## UC16: Database Integration & Maven Standardization
-The application was fully modernized to industrial standards:
-- **Standard Maven Structure**: All code relocated to `src/main/java/com/app/quantitymeasurement` and `src/test/java...`.
-- **H2 Database Integration**: Implemented `QuantityMeasurementDatabaseRepository` utilizing a Singleton `ConnectionPool` to persist all operation history (operands, units, results, errors) using standard JDBC `PreparedStatement`s.
-- **Application Configuration**: Driven by `application.properties`, allowing dynamic swapping between `CACHE` and `DATABASE` persistence modes.
-- **SLF4J Logging**: Replaced raw `System.out.println` with robust, leveled logging.
+3. **Application Configuration**:
+   - Added `application.properties` to manage the database connection details.
+   - Included a toggle to dynamically switch between `DATABASE` persistence and `CACHE` persistence.
 
-## Prerequisites
-- Java Development Kit (JDK) 11 or higher
-- Maven 3.6 or higher
+4. **SLF4J Logging Framework**:
+   - Replaced all legacy `System.out.println()` logs with SLF4J (`logger.info`, `logger.error`, etc.) paired with `logback-classic`.
 
-## Getting Started
+5. **Testing & Verification**:
+   - Implemented `QuantityMeasurementDatabaseRepositoryTest` for isolated JDBC testing.
+   - Implemented `QuantityMeasurementIntegrationTest` for end-to-end verifications.
+   - All tests pass via Maven.
 
-### Running Tests
-To run the full JUnit 5 and Mockito suite (74+ Unit and Integration Tests):
+## Running the Code
+
+**Build and Run Tests:**
 ```bash
 mvn clean test
 ```
 
-### Building the Application
-To compile and package the application into a Fat JAR using the Maven Shade plugin:
-```bash
-mvn clean package
-```
-
-### Running the Application
-To run the main demonstration through Maven:
+**Run the Application:**
 ```bash
 mvn exec:java -Dexec.mainClass="com.app.quantitymeasurement.QuantityMeasurementApp"
 ```
-
-## Architectural Highlights
-
-### Database Utilities
-- **`ConnectionPool.java`**: Custom implementation managing a fixed number of JDBC connections, including timeout logic, validation checking, and graceful closure.
-- **`schema.sql`**: Auto-creates the `quantity_measurement_history` table at runtime.
-
-### Logging
-All operational interactions, database saves, exceptions, and app states are logged cleanly using SLF4J and Logback.
-
-### Generic Safety
-The `Quantity<U extends IMeasurable>` class ensures that mathematical evaluations are evaluated securely without mixing logical domains at the repository or service level.
