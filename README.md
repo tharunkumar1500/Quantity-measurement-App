@@ -12,14 +12,14 @@ The Quantity Measurement App is a robust, N-Tier Java application designed to cl
 - **Arithmetic Operations**: Addition, Subtraction, and Division are supported for compatible units.
 - **Operational Safety**: Compile-time category safety prevents adding Length to Weight. Runtime validations prevent arithmetic on Temperature objects (which throws `UnsupportedOperationException`).
 
-### UC15: N-Tier Architecture Refactoring
+## UC15: N-Tier Architecture Refactoring
 The application underwent a major structural refactor to adopt a professional, layered architecture:
 - **Controller Layer (`QuantityMeasurementController`)**: Exposes methods for interaction and orchestration.
 - **Service Layer (`IQuantityMeasurementService`)**: Implements business rules, cross-category validations, and mathematical delegations.
 - **Repository Layer (`IQuantityMeasurementRepository`)**: Abstraction for data persistence.
 - **Entity/Model Layer (`QuantityMeasurementEntity`)**: Dedicated POJOs and DTOs to encapsulate the state of a measurement operation.
 
-### UC16: Database Integration & Maven Standardization
+## UC16: Database Integration & Maven Standardization
 The application was fully modernized to industrial standards:
 - **Standard Maven Structure**: All code relocated to `src/main/java/com/app/quantitymeasurement` and `src/test/java...`.
 - **H2 Database Integration**: Implemented `QuantityMeasurementDatabaseRepository` utilizing a Singleton `ConnectionPool` to persist all operation history (operands, units, results, errors) using standard JDBC `PreparedStatement`s.
