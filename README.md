@@ -1,12 +1,12 @@
-# Quantity Measurement Application (UC2) - Feet and Inches Equality
+# Quantity Measurement Application (UC3) - Generic Quantity
 
-This project implements the second use case of the Quantity Measurement Application. It extends the app to support equality checks for Inches along with Feet. It uses Test-Driven Development (TDD) principles to ensure high-quality, reliable code.
+This project implements the third use case of the Quantity Measurement Application. It refactors the codebase to eliminate the duplication between Feet and Inches by introducing a generic `Quantity` class and a `LengthUnit` enum, strictly adhering to the DRY (Don't Repeat Yourself) principle.
 
 ## Features
-- **Feet Measurement Class**: A robust inner class `Feet` to represent measurements in feet.
-- **Inches Measurement Class**: A separate inner class `Inches` to represent measurements in inches.
-- **Precise Equality Check**: Overridden `equals()` method for accurate comparison of both feet and inches.
-- **Comprehensive Testing**: JUnit 5 tests covering equality, inequality, null checks, and class type validation for both Feet and Inches.
+- **Generic Quantity Class**: A unified `Quantity` class to represent any measurement with a value and a unit type.
+- **LengthUnit Enum**: Defines measurement units (`FEET`, `INCHES`) and handles precise base unit conversion logic.
+- **Precise Equality Check**: The `equals()` method converts measurements to a common base unit before performing floating-point comparison.
+- **Comprehensive Testing**: JUnit 5 tests verifying equality, inequality, cross-unit comparison, null checks, and class type validation.
 
 ## Prerequisites
 - Java Development Kit (JDK) 11 or higher
@@ -28,28 +28,28 @@ mvn exec:java -Dexec.mainClass="quantitymeasurement.QuantityMeasurementApp"
 
 ## Sample Output
 ```
---- Feet Equality ---
-1.0 ft equals 1.0 ft: true
-1.0 ft equals 2.0 ft: false
---- Inches Equality ---
-1.0 inch equals 1.0 inch: true
-1.0 inch equals 2.0 inch: false
+--- Generic Quantity Equality ---
+Quantity(1.0, "feet") equals Quantity(1.0, "feet"): true
+Quantity(1.0, "feet") equals Quantity(2.0, "feet"): false
+Quantity(1.0, "feet") equals Quantity(12.0, "inches"): true
 ```
 
 ## Code Explanation
 
 ### `QuantityMeasurementApp.java`
-Contains the `Feet` and `Inches` inner classes with the following:
-- `equals(Object obj)` method implementing:
+Contains the `LengthUnit` Enum and `Quantity` class with the following:
+- `LengthUnit`: Manages the conversion factor relative to the base unit.
+- `Quantity.equals(Object obj)` method implementing:
   - Reference check (same object)
-  - Null check
-  - Type check (must be the correct instance)
-  - Value comparison using `Double.compare()` for floating-point precision
+  - Null check and type check
+  - Base unit conversion utilizing `LengthUnit`
+  - Value comparison using `Double.compare()` for precise equality check.
 
 ### `QuantityMeasurementTest.java`
 JUnit 5 tests verifying:
-- Same value equality for both Feet and Inches.
-- Different values inequality for both Feet and Inches.
-- Comparing with null returning false.
-- Different class types returning false.
-- Same object reference returning true.
+- **Base Equality Tests**: Basic comparison between identical units (Feet).
+- **Same Unit Checks**: Validating Inches to Inches comparison.
+- **Cross Unit Checks**: Validating cross-unit comparisons:
+  - 0 Feet == 0 Inches
+  - 1 Foot == 12 Inches
+  - 1 Foot != 1 Inch

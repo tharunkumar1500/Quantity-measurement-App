@@ -4,63 +4,64 @@ import java.util.Objects;
 
 public class QuantityMeasurementApp {
 
-    public static class Feet {
-        private final double value;
+    public enum LengthUnit {
+        FEET(12.0),
+        INCHES(1.0);
 
-        public Feet(double value) {
-            this.value = value;
+        private final double baseUnitConversionFactor;
+
+        LengthUnit(double baseUnitConversionFactor) {
+            this.baseUnitConversionFactor = baseUnitConversionFactor;
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            Feet feet = (Feet) obj;
-            return Double.compare(feet.value, value) == 0;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(value);
+        public double toBaseUnit(double value) {
+            return value * this.baseUnitConversionFactor;
         }
     }
 
-    public static class Inches {
+    public static class Quantity {
         private final double value;
+        private final LengthUnit unit;
 
-        public Inches(double value) {
+        public Quantity(double value, LengthUnit unit) {
             this.value = value;
+            this.unit = unit;
         }
 
         @Override
         public boolean equals(Object obj) {
             if (this == obj) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
-            Inches inches = (Inches) obj;
-            return Double.compare(inches.value, value) == 0;
+            Quantity quantity = (Quantity) obj;
+            return Double.compare(
+                quantity.unit.toBaseUnit(quantity.value),
+                this.unit.toBaseUnit(this.value)
+            ) == 0;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(value);
+            return Objects.hash(unit.toBaseUnit(value));
+        }
+
+        @Override
+        public String toString() {
+            return "Quantity(" + value + ", \"" + unit.name().toLowerCase() + "\")";
         }
     }
 
     public static void main(String[] args) {
         System.out.println("Welcome to Quantity Measurement App!");
         
-        System.out.println("--- Feet Equality ---");
-        Feet feet1 = new Feet(1.0);
-        Feet feet2 = new Feet(1.0);
-        System.out.println("1.0 ft equals 1.0 ft: " + feet1.equals(feet2));
-        Feet feet3 = new Feet(2.0);
-        System.out.println("1.0 ft equals 2.0 ft: " + feet1.equals(feet3));
+        System.out.println("--- Generic Quantity Equality ---");
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity f2 = new Quantity(1.0, LengthUnit.FEET);
+        System.out.println(f1 + " equals " + f2 + ": " + f1.equals(f2));
 
-        System.out.println("--- Inches Equality ---");
-        Inches inches1 = new Inches(1.0);
-        Inches inches2 = new Inches(1.0);
-        System.out.println("1.0 inch equals 1.0 inch: " + inches1.equals(inches2));
-        Inches inches3 = new Inches(2.0);
-        System.out.println("1.0 inch equals 2.0 inch: " + inches1.equals(inches3));
+        Quantity f3 = new Quantity(2.0, LengthUnit.FEET);
+        System.out.println(f1 + " equals " + f3 + ": " + f1.equals(f3));
+
+        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
+        System.out.println(f1 + " equals " + i1 + ": " + f1.equals(i1));
     }
 }
