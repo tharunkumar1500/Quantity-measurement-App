@@ -317,4 +317,49 @@ public class QuantityMeasurementTest {
         Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
         assertNotEquals(kg1, f1);
     }
+
+    // --- Volume Tests (UC11) ---
+
+    @Test
+    public void givenOneLitreAndOneLitre_ShouldReturnEqual() {
+        Quantity<VolumeUnit> l1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> l2 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        assertEquals(l1, l2);
+    }
+
+    @Test
+    public void givenOneLitreAndThousandMillilitres_ShouldReturnEqual() {
+        Quantity<VolumeUnit> l1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> ml1 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        assertEquals(l1, ml1);
+    }
+
+    @Test
+    public void givenOneGallon_ShouldReturnApproxLitres() {
+        Quantity<VolumeUnit> gal1 = new Quantity<>(1.0, VolumeUnit.GALLON);
+        assertEquals(3.785, gal1.convertTo(VolumeUnit.LITRE)); // 3.78541 rounded to 3 places is 3.785
+    }
+
+    @Test
+    public void givenOneLitreAndThousandMillilitres_ShouldReturnTwoLitres_WhenTargetIsLitre() {
+        Quantity<VolumeUnit> l1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> ml1 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        Quantity<VolumeUnit> sum = l1.add(ml1, VolumeUnit.LITRE);
+        assertEquals(new Quantity<>(2.0, VolumeUnit.LITRE), sum);
+    }
+
+    @Test
+    public void givenOneGallonAndThreePointSevenEightLitres_ShouldReturnApproxTwoGallons() {
+        Quantity<VolumeUnit> gal1 = new Quantity<>(1.0, VolumeUnit.GALLON);
+        Quantity<VolumeUnit> l1 = new Quantity<>(3.785, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> sum = gal1.add(l1, VolumeUnit.GALLON);
+        assertEquals(new Quantity<>(2.0, VolumeUnit.GALLON), sum);
+    }
+
+    @Test
+    public void givenOneLitreAndOneKg_ShouldNotBeEqual() {
+        Quantity<VolumeUnit> l1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        assertNotEquals(l1, kg1);
+    }
 }

@@ -31,5 +31,14 @@ public class QuantityMeasurementApp {
         Quantity<WeightUnit> lb1 = new Quantity<>(1.0, WeightUnit.POUND);
         Quantity<WeightUnit> lb2 = new Quantity<>(1.0, WeightUnit.POUND);
         demonstrateAddition(lb1, lb2, WeightUnit.KILOGRAM);
+
+        System.out.println("\n--- Volume Demonstration (UC11) ---");
+        Quantity<VolumeUnit> l1 = new Quantity<>(1.0, VolumeUnit.LITRE);
+        Quantity<VolumeUnit> ml1 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
+        demonstrateEquality(l1, ml1);
+
+        Quantity<VolumeUnit> gal1 = new Quantity<>(1.0, VolumeUnit.GALLON);
+        Quantity<VolumeUnit> l2 = new Quantity<>(3.785, VolumeUnit.LITRE);
+        demonstrateAddition(gal1, l2, VolumeUnit.GALLON);
     }
 }
