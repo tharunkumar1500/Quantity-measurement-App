@@ -82,4 +82,60 @@ public class QuantityMeasurementTest {
         Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
         assertNotEquals(f1, i1);
     }
+
+    // --- Yard Tests ---
+
+    @Test
+    public void givenThreeFeetAndOneYard_ShouldReturnEqual() {
+        Quantity f1 = new Quantity(3.0, LengthUnit.FEET);
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        assertEquals(f1, y1);
+        assertEquals(y1, f1);
+    }
+
+    @Test
+    public void givenOneFootAndOneYard_ShouldReturnNotEqual() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        assertNotEquals(f1, y1);
+    }
+
+    @Test
+    public void givenOneInchAndOneYard_ShouldReturnNotEqual() {
+        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        assertNotEquals(i1, y1);
+    }
+
+    @Test
+    public void givenOneYardAndThirtySixInches_ShouldReturnEqual() {
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
+        assertEquals(y1, i1);
+        assertEquals(i1, y1);
+    }
+
+    @Test
+    public void givenThirtySixInchesAndOneYard_ShouldReturnEqual() {
+        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        assertEquals(i1, y1);
+    }
+
+    @Test
+    public void givenOneYardAndThreeFeet_ShouldReturnEqual() {
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity f1 = new Quantity(3.0, LengthUnit.FEET);
+        assertEquals(y1, f1);
+    }
+
+    // --- CM Tests ---
+
+    @Test
+    public void givenTwoInchesAndFivePointZeroEightCm_ShouldReturnEqual() {
+        Quantity i1 = new Quantity(2.0, LengthUnit.INCHES);
+        Quantity cm1 = new Quantity(5.08, LengthUnit.CM);
+        assertEquals(i1, cm1);
+        assertEquals(cm1, i1);
+    }
 }

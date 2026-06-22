@@ -6,7 +6,9 @@ public class QuantityMeasurementApp {
 
     public enum LengthUnit {
         FEET(12.0),
-        INCHES(1.0);
+        INCHES(1.0),
+        YARD(36.0),
+        CM(1.0 / 2.54);
 
         private final double baseUnitConversionFactor;
 
@@ -33,10 +35,9 @@ public class QuantityMeasurementApp {
             if (this == obj) return true;
             if (obj == null || getClass() != obj.getClass()) return false;
             Quantity quantity = (Quantity) obj;
-            return Double.compare(
-                quantity.unit.toBaseUnit(quantity.value),
-                this.unit.toBaseUnit(this.value)
-            ) == 0;
+            double value1 = Math.round(quantity.unit.toBaseUnit(quantity.value) * 1000.0) / 1000.0;
+            double value2 = Math.round(this.unit.toBaseUnit(this.value) * 1000.0) / 1000.0;
+            return Double.compare(value1, value2) == 0;
         }
 
         @Override
