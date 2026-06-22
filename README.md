@@ -1,17 +1,19 @@
-# Quantity Measurement Application (UC8) - Refactoring Unit Enum to Standalone
+# Quantity Measurement Application (UC9) - Weight Measurement (Kilogram, Gram, Pound)
 
-This project implements the eighth use case of the Quantity Measurement Application. It focuses on an architectural refactoring to eliminate inner classes, resolve Single Responsibility Principle (SRP) violations, and establish a scalable structure for future measurement categories.
+This project implements the ninth use case of the Quantity Measurement Application. It introduces a new measurement category, **Weight**, and successfully scales the generic architectural design to support independent, incomparable measurement categories (Length and Weight) side-by-side securely.
 
 ## Features
-- **Standalone Unit Enum**: `LengthUnit` is now a standalone enum that fully encapsulates base unit conversion logic.
-- **Standalone Quantity Class**: The `Quantity` class is now a top-level entity that delegates conversion operations to the unit class, making it loosely coupled.
-- **Extended Unit Support**: Supports `FEET`, `INCHES`, `YARD`, and `CM`.
-- **Unit Conversion API**: Includes `convertTo(LengthUnit targetUnit)` for explicit conversions.
+- **Generic Unit Interface**: `Unit` is an interface establishing base conversion contracts.
+- **Standalone Enums**: 
+  - `LengthUnit` supports `FEET`, `INCHES`, `YARD`, and `CM`.
+  - `WeightUnit` supports `KILOGRAM`, `GRAM`, and `POUND`.
+- **Standalone Generic Quantity Class**: The `Quantity` class is category-agnostic. It delegates math to the respective unit implementation.
+- **Strict Category Boundaries**: Validates operations (add, equals, convert) and throws `IllegalArgumentException` if a mix between Length and Weight is attempted.
 - **Arithmetic Operations (Addition)**: 
   - `add(Quantity other)`: Adds two units and returns the result in the unit of the first operand.
-  - `add(Quantity other, LengthUnit targetUnit)`: Adds two units and returns the result in the explicitly specified target unit.
+  - `add(Quantity other, Unit targetUnit)`: Adds two units and returns the result in the explicitly specified target unit.
 - **Robust Validation**: Rejects invalid states like `null` units, `NaN` values, and `Infinite` values via `IllegalArgumentException`.
-- **Comprehensive Testing**: JUnit 5 tests verifying equality, cross-unit comparison, conversions, explicit target additions, and exception handling.
+- **Comprehensive Testing**: JUnit 5 tests verifying equality, cross-unit comparison, conversions, explicit target additions, cross-category boundary safety, and exception handling.
 
 ## Prerequisites
 - Java Development Kit (JDK) 11 or higher
@@ -41,23 +43,25 @@ Quantity(36.0, "inches") + Quantity(1.0, "yards") to "feet" = Quantity(6.0, "fee
 
 ## Code Explanation
 
-### `LengthUnit.java`
-A standalone Enum managing the length units:
-- `LengthUnit`: Manages the conversion factor relative to the base unit for Feet, Inches, Yards, and CM.
-- `convertToBaseUnit(double value)` & `convertFromBaseUnit(double baseValue)`: Encapsulates all mathematical conversion responsibility securely inside the Enum.
+### `Unit.java`
+An interface establishing unit contract rules (`convertToBaseUnit` & `convertFromBaseUnit`).
+
+### `LengthUnit.java` & `WeightUnit.java`
+Standalone Enums managing length and weight units securely via internal factors, implementing the `Unit` interface.
 
 ### `Quantity.java`
 A standalone Class representing the mathematical model:
-- `Quantity` constructor: Validates inputs (throws `IllegalArgumentException` on NaN, Infinity, or null unit).
-- `convertTo(LengthUnit targetUnit)`: Delegates base unit arithmetic to `LengthUnit` and returns the precise `double` numeric value.
-- `add(...)`: Overloaded methods to handle summation with and without an explicit target unit, returning an immutable `Quantity` object.
-- `equals(Object obj)` method: Handles references, null checks, type checks, and precise floating-point comparison.
+- `Quantity` constructor: Validates inputs.
+- `convertTo(Unit targetUnit)`: Delegates base unit arithmetic. Ensures `targetUnit` is of the exact same category.
+- `add(...)`: Overloaded methods to handle summation with category checks.
+- `equals(Object obj)` method: Handles references, type checks, and category isolation, enabling precise floating-point comparison only when categories match.
 
 ### `QuantityMeasurementTest.java`
 JUnit 5 tests verifying:
-- **Refactored APIs**: Proves 100% backward compatibility of previous test logic with the new standalone classes.
+- **Weight Tests (UC9)**: Validates equality, conversion, and addition across Kg, G, and Lbs.
+- **Cross Category Boundary Tests (UC9)**: Proves Length vs Weight operations are prohibited and throw `IllegalArgumentException`.
 - **Target Unit Addition Tests (UC7)**: Tests summation with an explicit output unit.
 - **Addition Tests (UC6)**: Tests basic summation logic.
 - **Validation Tests**: Ensures constructors and methods reject invalid states (`null`, `NaN`, `Infinity`).
 - **Conversion Tests**: Tests explicit numeric conversion.
-- **Base Equality & Cross-Unit Checks**: Validating comparison logic across all 4 units.
+- **Base Equality & Cross-Unit Checks**: Validating comparison logic across all length units.

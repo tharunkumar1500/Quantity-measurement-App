@@ -270,4 +270,64 @@ public class QuantityMeasurementTest {
         Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
         assertThrows(IllegalArgumentException.class, () -> f1.add(i1, null));
     }
+
+    // --- Weight Tests (UC9) ---
+
+    @Test
+    public void givenOneKgAndOneKg_ShouldReturnEqual() {
+        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        Quantity kg2 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        assertEquals(kg1, kg2);
+    }
+
+    @Test
+    public void givenOneKgAndThousandGrams_ShouldReturnEqual() {
+        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        Quantity g1 = new Quantity(1000.0, WeightUnit.GRAM);
+        assertEquals(kg1, g1);
+    }
+
+    @Test
+    public void givenOnePound_ShouldReturnApproxKg() {
+        Quantity lb1 = new Quantity(1.0, WeightUnit.POUND);
+        assertEquals(0.454, lb1.convertTo(WeightUnit.KILOGRAM)); // 0.453592 rounded to 3 places
+    }
+
+    @Test
+    public void givenThousandGramsAndOneKg_ShouldReturnTwoKg_WhenTargetIsKg() {
+        Quantity g1 = new Quantity(1000.0, WeightUnit.GRAM);
+        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        Quantity sum = g1.add(kg1, WeightUnit.KILOGRAM);
+        assertEquals(new Quantity(2.0, WeightUnit.KILOGRAM), sum);
+    }
+
+    @Test
+    public void givenOnePoundAndOnePound_ShouldReturnExpectedKg() {
+        Quantity lb1 = new Quantity(1.0, WeightUnit.POUND);
+        Quantity lb2 = new Quantity(1.0, WeightUnit.POUND);
+        Quantity sum = lb1.add(lb2, WeightUnit.KILOGRAM);
+        assertEquals(new Quantity(0.908, WeightUnit.KILOGRAM), sum);
+    }
+
+    // --- Cross Category Boundary Tests ---
+
+    @Test
+    public void givenOneKgAndOneFoot_ShouldNotBeEqual() {
+        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        assertNotEquals(kg1, f1);
+    }
+
+    @Test
+    public void givenOneKgAndOneFoot_ShouldThrowException_OnAdd() {
+        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        assertThrows(IllegalArgumentException.class, () -> kg1.add(f1));
+    }
+
+    @Test
+    public void givenLengthUnit_ShouldThrowException_WhenConvertedToWeightUnit() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        assertThrows(IllegalArgumentException.class, () -> f1.convertTo(WeightUnit.KILOGRAM));
+    }
 }
