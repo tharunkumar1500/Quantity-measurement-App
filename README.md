@@ -1,21 +1,21 @@
-# Quantity Measurement Application (UC13) - Centralized Arithmetic Logic (DRY)
+# Quantity Measurement Application (UC14) - Temperature Measurement
 
-This project implements the thirteenth use case of the Quantity Measurement Application. It refactors the arithmetic operations (Addition, Subtraction, Division) in the generic `Quantity<U>` class to eliminate duplicate code by introducing a centralized, DRY (Don't Repeat Yourself) helper method.
+This project implements the fourteenth use case of the Quantity Measurement Application. It introduces **Temperature Measurement** (Celsius and Fahrenheit) while refactoring the generic `IMeasurable` interface to optionally disable arithmetic operations for measurement categories where they don't logically apply (like Temperature).
 
 ## Features
-- **Generic Unit Interface**: `IMeasurable` is an interface standardizing conversion behaviors across categories.
+- **Generic Unit Interface**: `IMeasurable` is an interface standardizing conversion behaviors and operational support validation across categories.
 - **Standalone Enums**: 
   - `LengthUnit` implements `IMeasurable` and supports `FEET`, `INCHES`, `YARD`, and `CM`.
   - `WeightUnit` implements `IMeasurable` and supports `KILOGRAM`, `GRAM`, and `POUND`.
   - `VolumeUnit` implements `IMeasurable` and supports `LITRE`, `MILLILITRE`, and `GALLON`.
+  - `TemperatureUnit` implements `IMeasurable` and supports `CELSIUS` and `FAHRENHEIT`.
 - **Compile-Time Category Safety**: The `Quantity<U>` class is strictly parameterized. Attempts to mix categories (e.g. `LengthUnit` + `VolumeUnit`) will fail to compile. This replaces error-prone runtime checks.
-- **Centralized Arithmetic Operations (DRY)**: 
-  - `add(...)`: Sums two quantities of the same category, returning a `Quantity<U>`.
-  - `subtract(...)`: Finds the difference between two quantities of the same category, returning a `Quantity<U>`.
-  - `divide(...)`: Computes the ratio between two quantities of the same category, returning a dimensionless scalar `double`.
-  - Under the hood, these methods delegate validation and base unit conversion to a private helper `performOperation`, dramatically reducing boilerplate.
+- **Centralized & Validated Arithmetic Operations (DRY)**: 
+  - `add(...)`, `subtract(...)`, `divide(...)`: Generic arithmetic methods wrapping `performOperation`.
+  - Under the hood, these methods delegate to a private helper `performOperation`, which validates whether the `IMeasurable` category supports arithmetic (via `validateOperationSupport`).
+  - Attempts to perform arithmetic on Temperature objects safely fail with an `UnsupportedOperationException`.
 - **Robust Validation**: Rejects invalid states like `null` units, `NaN` values, and `Infinite` values via `IllegalArgumentException`. Division by zero explicitly throws an exception.
-- **Comprehensive Testing**: JUnit 5 tests utilizing generic parameters to verify equality, conversions, arithmetic (add, subtract, divide), and isolated category tests for Length, Weight, and Volume.
+- **Comprehensive Testing**: JUnit 5 tests utilizing generic parameters to verify equality, conversions, arithmetic, unsupported constraints, and isolated category tests for Length, Weight, Volume, and Temperature.
 
 ## Prerequisites
 - Java Development Kit (JDK) 11 or higher
@@ -30,7 +30,7 @@ mvn clean test
 ```
 
 ### Running the Application
-To run the main demonstration, demonstrating Length, Weight, and Volume cleanly using one generic orchestration method:
+To run the main demonstration, demonstrating Length, Weight, Volume, and Temperature cleanly using one generic orchestration method:
 ```bash
 mvn exec:java -Dexec.mainClass="quantitymeasurement.QuantityMeasurementApp"
 ```
@@ -54,27 +54,31 @@ Quantity(1.0, "gallon") + Quantity(3.785, "litre") to gallon = Quantity(2.0, "ga
 --- Subtraction & Division (UC12) ---
 Quantity(10.0, "feet") - Quantity(6.0, "inches") to feet = Quantity(9.5, "feet")
 Quantity(10.0, "kilogram") / Quantity(5.0, "kilogram") = 2.0
+
+--- Temperature Demonstration (UC14) ---
+Quantity(0.0, "celsius") equals Quantity(32.0, "fahrenheit"): true
+Attempting unsupported operation (Addition on Temperature)...
+Caught Expected Exception: Temperature measurement does not support add
 ```
 
 ## Code Explanation
 
-### `IMeasurable.java`
-An interface establishing unit contract rules (`getConversionFactor()`, `convertToBaseUnit()`, `convertFromBaseUnit()`, `getUnitName()`).
+### `IMeasurable.java` & `SupportsArithmetic.java`
+An interface establishing unit contract rules (`getConversionFactor()`, `convertToBaseUnit()`, `convertFromBaseUnit()`, `getUnitName()`, `validateOperationSupport()`). The `SupportsArithmetic` interface is a functional interface utilized by Enums to declare arithmetic validity.
 
-### `LengthUnit.java`, `WeightUnit.java`, & `VolumeUnit.java`
-Standalone Enums managing measurement units securely via internal factors, seamlessly implementing the `IMeasurable` interface. `VolumeUnit` supports Litre (base unit), Millilitre, and Gallon.
+### Measurement Unit Enums
+Standalone Enums managing measurement units securely. `TemperatureUnit` implements bidirectional formula conversions (`c -> (c * 9/5) + 32` etc.) rather than standard unit scale multipliers.
 
 ### `Quantity<U extends IMeasurable>`
 A standalone Class representing the parameterized mathematical model:
 - `Quantity` constructor: Validates inputs.
-- `convertTo(U targetUnit)`: Delegates base unit arithmetic. 
-- `performOperation`: Private helper method that standardizes validations, unifies base conversions, and evaluates logic based on a private `ArithmeticOperation` enum.
-- `add(...)`, `subtract(...)`, `divide(...)`: Generic arithmetic methods wrapping `performOperation`.
+- `performOperation`: Private helper method that standardizes validations, checks operation support, unifies base conversions, and evaluates logic based on a private `ArithmeticOperation` enum.
 - `equals(Object obj)` method: Handles runtime type checks. Generic bounds block statically invalid comparisons but it maintains logic for raw objects.
 
 ### `QuantityMeasurementTest.java`
 JUnit 5 tests verifying:
 - **Refactored Generic APIs**: Validates strict compilation and safe test instantiation.
+- **Temperature Tests (UC14)**: Equality, bidirectional conversion, negative boundaries, and operational constraint exceptions.
 - **Arithmetic Tests (UC12/13)**: Validates subtraction and division logic across various units and boundary cases like division by zero.
 - **Volume Tests (UC11)**: Validates equality, conversion, and addition across L, mL, and Gal.
 - **Weight Tests (UC9)**: Validates equality, conversion, and addition across Kg, G, and Lbs.

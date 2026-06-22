@@ -411,4 +411,48 @@ public class QuantityMeasurementTest {
         Quantity<LengthUnit> zeroLength = new Quantity<>(0.0, LengthUnit.FEET);
         assertThrows(IllegalArgumentException.class, () -> f1.divide(zeroLength));
     }
+
+    // --- Temperature Tests (UC14) ---
+
+    @Test
+    public void givenZeroCelsiusAndZeroCelsius_ShouldBeEqual() {
+        Quantity<TemperatureUnit> c1 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> c2 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+        assertEquals(c1, c2);
+    }
+
+    @Test
+    public void givenZeroCelsiusAnd32Fahrenheit_ShouldBeEqual() {
+        Quantity<TemperatureUnit> c1 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> f1 = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+        assertEquals(c1, f1);
+    }
+
+    @Test
+    public void given100CelsiusAnd212Fahrenheit_ShouldBeEqual() {
+        Quantity<TemperatureUnit> c1 = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> f1 = new Quantity<>(212.0, TemperatureUnit.FAHRENHEIT);
+        assertEquals(c1, f1);
+    }
+
+    @Test
+    public void givenNegative40CelsiusAndNegative40Fahrenheit_ShouldBeEqual() {
+        Quantity<TemperatureUnit> c1 = new Quantity<>(-40.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> f1 = new Quantity<>(-40.0, TemperatureUnit.FAHRENHEIT);
+        assertEquals(c1, f1);
+    }
+
+    @Test
+    public void given100CelsiusAnd50Celsius_ShouldThrowUnsupportedOperationExceptionOnAddition() {
+        Quantity<TemperatureUnit> c1 = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> c2 = new Quantity<>(50.0, TemperatureUnit.CELSIUS);
+        assertThrows(UnsupportedOperationException.class, () -> c1.add(c2));
+    }
+
+    @Test
+    public void givenCelsiusAndLength_ShouldNotBeEqual() {
+        Quantity<TemperatureUnit> c1 = new Quantity<>(100.0, TemperatureUnit.CELSIUS);
+        Quantity<LengthUnit> f1 = new Quantity<>(100.0, LengthUnit.FEET);
+        assertNotEquals(c1, f1);
+    }
 }

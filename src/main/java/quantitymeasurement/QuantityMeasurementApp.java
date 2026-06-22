@@ -59,5 +59,17 @@ public class QuantityMeasurementApp {
         Quantity<WeightUnit> kg2 = new Quantity<>(10.0, WeightUnit.KILOGRAM);
         Quantity<WeightUnit> kg3 = new Quantity<>(5.0, WeightUnit.KILOGRAM);
         demonstrateDivision(kg2, kg3);
+
+        System.out.println("\n--- Temperature Demonstration (UC14) ---");
+        Quantity<TemperatureUnit> c1 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
+        Quantity<TemperatureUnit> f4 = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
+        demonstrateEquality(c1, f4);
+
+        System.out.println("Attempting unsupported operation (Addition on Temperature)...");
+        try {
+            c1.add(f4);
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Caught Expected Exception: " + e.getMessage());
+        }
     }
 }

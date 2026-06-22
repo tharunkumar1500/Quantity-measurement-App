@@ -31,6 +31,8 @@ public class Quantity<U extends IMeasurable> {
     }
 
     private double performOperation(Quantity<U> other, ArithmeticOperation operation) {
+        this.unit.validateOperationSupport(operation.name().toLowerCase());
+        
         if (operation == ArithmeticOperation.DIVIDE && other.value == 0.0) {
             throw new IllegalArgumentException("Cannot divide by zero quantity.");
         }
