@@ -138,4 +138,58 @@ public class QuantityMeasurementTest {
         assertEquals(i1, cm1);
         assertEquals(cm1, i1);
     }
+
+    // --- Validation Tests ---
+    @Test
+    public void givenNullUnit_ShouldThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> new Quantity(1.0, null));
+    }
+
+    @Test
+    public void givenNaNValue_ShouldThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> new Quantity(Double.NaN, LengthUnit.FEET));
+    }
+
+    @Test
+    public void givenInfiniteValue_ShouldThrowException() {
+        assertThrows(IllegalArgumentException.class, () -> new Quantity(Double.POSITIVE_INFINITY, LengthUnit.FEET));
+    }
+
+    @Test
+    public void givenNullTargetUnitInConversion_ShouldThrowException() {
+        Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+        assertThrows(IllegalArgumentException.class, () -> q1.convertTo(null));
+    }
+
+    // --- Conversion Tests ---
+
+    @Test
+    public void givenOneFoot_ShouldConvertToTwelveInches() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        assertEquals(12.0, f1.convertTo(LengthUnit.INCHES));
+    }
+
+    @Test
+    public void givenThirtySixInches_ShouldConvertToOneYard() {
+        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
+        assertEquals(1.0, i1.convertTo(LengthUnit.YARD));
+    }
+
+    @Test
+    public void givenOneInch_ShouldConvertToTwoPointFiveFourCm() {
+        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
+        assertEquals(2.54, i1.convertTo(LengthUnit.CM));
+    }
+
+    @Test
+    public void givenTwoYards_ShouldConvertToSixFeet() {
+        Quantity y1 = new Quantity(2.0, LengthUnit.YARD);
+        assertEquals(6.0, y1.convertTo(LengthUnit.FEET));
+    }
+
+    @Test
+    public void givenOneYard_ShouldConvertToNinetyOnePointFourFourCm() {
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        assertEquals(91.44, y1.convertTo(LengthUnit.CM));
+    }
 }
