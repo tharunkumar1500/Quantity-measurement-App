@@ -1,2 +1,4 @@
-quantitymeasurement\QuantityMeasurementAppTest.class
-quantitymeasurement\QuantityMeasurementTest.class
+com\app\quantitymeasurement\repository\QuantityMeasurementDatabaseRepositoryTest.class
+com\app\quantitymeasurement\integrationTests\QuantityMeasurementIntegrationTest.class
+com\app\quantitymeasurement\QuantityMeasurementAppTest.class
+com\app\quantitymeasurement\QuantityMeasurementTest.class
