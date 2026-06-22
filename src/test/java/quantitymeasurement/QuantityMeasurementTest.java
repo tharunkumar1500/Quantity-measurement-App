@@ -9,33 +9,33 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenZeroFeetAndZeroFeet_ShouldReturnEqual() {
-        Quantity f1 = new Quantity(0.0, LengthUnit.FEET);
-        Quantity f2 = new Quantity(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f2 = new Quantity<>(0.0, LengthUnit.FEET);
         assertEquals(f1, f2);
     }
 
     @Test
     public void givenTwoDifferentFeetValues_ShouldReturnNotEqual() {
-        Quantity f1 = new Quantity(0.0, LengthUnit.FEET);
-        Quantity f2 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f2 = new Quantity<>(1.0, LengthUnit.FEET);
         assertNotEquals(f1, f2);
     }
 
     @Test
     public void givenNullQuantity_ShouldReturnNotEqual() {
-        Quantity f1 = new Quantity(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(0.0, LengthUnit.FEET);
         assertNotEquals(f1, null);
     }
 
     @Test
     public void givenReferenceToSameObject_ShouldReturnEqual() {
-        Quantity f1 = new Quantity(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(0.0, LengthUnit.FEET);
         assertEquals(f1, f1);
     }
 
     @Test
     public void givenDifferentClassType_ShouldReturnNotEqual() {
-        Quantity f1 = new Quantity(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(0.0, LengthUnit.FEET);
         Object obj = new Object();
         assertNotEquals(f1, obj);
     }
@@ -44,15 +44,15 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenZeroInchesAndZeroInches_ShouldReturnEqual() {
-        Quantity i1 = new Quantity(0.0, LengthUnit.INCHES);
-        Quantity i2 = new Quantity(0.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i1 = new Quantity<>(0.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i2 = new Quantity<>(0.0, LengthUnit.INCHES);
         assertEquals(i1, i2);
     }
 
     @Test
     public void givenTwoDifferentInchesValues_ShouldReturnNotEqual() {
-        Quantity i1 = new Quantity(0.0, LengthUnit.INCHES);
-        Quantity i2 = new Quantity(1.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i1 = new Quantity<>(0.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i2 = new Quantity<>(1.0, LengthUnit.INCHES);
         assertNotEquals(i1, i2);
     }
 
@@ -60,23 +60,23 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenZeroFeetAndZeroInches_ShouldReturnEqual() {
-        Quantity f1 = new Quantity(0.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(0.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> f1 = new Quantity<>(0.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(0.0, LengthUnit.INCHES);
         assertEquals(f1, i1);
     }
 
     @Test
     public void givenOneFootAndTwelveInches_ShouldReturnEqual() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(12.0, LengthUnit.INCHES);
         assertEquals(f1, i1);
         assertEquals(i1, f1);
     }
 
     @Test
     public void givenOneFootAndOneInch_ShouldReturnNotEqual() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(1.0, LengthUnit.INCHES);
         assertNotEquals(f1, i1);
     }
 
@@ -84,45 +84,45 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenThreeFeetAndOneYard_ShouldReturnEqual() {
-        Quantity f1 = new Quantity(3.0, LengthUnit.FEET);
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> f1 = new Quantity<>(3.0, LengthUnit.FEET);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
         assertEquals(f1, y1);
         assertEquals(y1, f1);
     }
 
     @Test
     public void givenOneFootAndOneYard_ShouldReturnNotEqual() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
         assertNotEquals(f1, y1);
     }
 
     @Test
     public void givenOneInchAndOneYard_ShouldReturnNotEqual() {
-        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> i1 = new Quantity<>(1.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
         assertNotEquals(i1, y1);
     }
 
     @Test
     public void givenOneYardAndThirtySixInches_ShouldReturnEqual() {
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
-        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> i1 = new Quantity<>(36.0, LengthUnit.INCHES);
         assertEquals(y1, i1);
         assertEquals(i1, y1);
     }
 
     @Test
     public void givenThirtySixInchesAndOneYard_ShouldReturnEqual() {
-        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> i1 = new Quantity<>(36.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
         assertEquals(i1, y1);
     }
 
     @Test
     public void givenOneYardAndThreeFeet_ShouldReturnEqual() {
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
-        Quantity f1 = new Quantity(3.0, LengthUnit.FEET);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> f1 = new Quantity<>(3.0, LengthUnit.FEET);
         assertEquals(y1, f1);
     }
 
@@ -130,8 +130,8 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenTwoInchesAndFivePointZeroEightCm_ShouldReturnEqual() {
-        Quantity i1 = new Quantity(2.0, LengthUnit.INCHES);
-        Quantity cm1 = new Quantity(5.08, LengthUnit.CM);
+        Quantity<LengthUnit> i1 = new Quantity<>(2.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> cm1 = new Quantity<>(5.08, LengthUnit.CM);
         assertEquals(i1, cm1);
         assertEquals(cm1, i1);
     }
@@ -139,22 +139,22 @@ public class QuantityMeasurementTest {
     // --- Validation Tests ---
     @Test
     public void givenNullUnit_ShouldThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> new Quantity(1.0, null));
+        assertThrows(IllegalArgumentException.class, () -> new Quantity<>(1.0, null));
     }
 
     @Test
     public void givenNaNValue_ShouldThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> new Quantity(Double.NaN, LengthUnit.FEET));
+        assertThrows(IllegalArgumentException.class, () -> new Quantity<>(Double.NaN, LengthUnit.FEET));
     }
 
     @Test
     public void givenInfiniteValue_ShouldThrowException() {
-        assertThrows(IllegalArgumentException.class, () -> new Quantity(Double.POSITIVE_INFINITY, LengthUnit.FEET));
+        assertThrows(IllegalArgumentException.class, () -> new Quantity<>(Double.POSITIVE_INFINITY, LengthUnit.FEET));
     }
 
     @Test
     public void givenNullTargetUnitInConversion_ShouldThrowException() {
-        Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> q1 = new Quantity<>(1.0, LengthUnit.FEET);
         assertThrows(IllegalArgumentException.class, () -> q1.convertTo(null));
     }
 
@@ -162,31 +162,31 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenOneFoot_ShouldConvertToTwelveInches() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
         assertEquals(12.0, f1.convertTo(LengthUnit.INCHES));
     }
 
     @Test
     public void givenThirtySixInches_ShouldConvertToOneYard() {
-        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i1 = new Quantity<>(36.0, LengthUnit.INCHES);
         assertEquals(1.0, i1.convertTo(LengthUnit.YARD));
     }
 
     @Test
     public void givenOneInch_ShouldConvertToTwoPointFiveFourCm() {
-        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i1 = new Quantity<>(1.0, LengthUnit.INCHES);
         assertEquals(2.54, i1.convertTo(LengthUnit.CM));
     }
 
     @Test
     public void givenTwoYards_ShouldConvertToSixFeet() {
-        Quantity y1 = new Quantity(2.0, LengthUnit.YARD);
+        Quantity<LengthUnit> y1 = new Quantity<>(2.0, LengthUnit.YARD);
         assertEquals(6.0, y1.convertTo(LengthUnit.FEET));
     }
 
     @Test
     public void givenOneYard_ShouldConvertToNinetyOnePointFourFourCm() {
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
         assertEquals(91.44, y1.convertTo(LengthUnit.CM));
     }
 
@@ -194,39 +194,39 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenTwoInchesAndTwoInches_ShouldReturnFourInches() {
-        Quantity i1 = new Quantity(2.0, LengthUnit.INCHES);
-        Quantity i2 = new Quantity(2.0, LengthUnit.INCHES);
-        Quantity sum = i1.add(i2);
-        assertEquals(new Quantity(4.0, LengthUnit.INCHES), sum);
+        Quantity<LengthUnit> i1 = new Quantity<>(2.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> i2 = new Quantity<>(2.0, LengthUnit.INCHES);
+        Quantity<?> sum = i1.add(i2);
+        assertEquals(new Quantity<>(4.0, LengthUnit.INCHES), sum);
     }
 
     @Test
     public void givenOneFootAndTwoInches_ShouldReturnFourteenInches_WhenAddedToInches() {
-        Quantity i1 = new Quantity(2.0, LengthUnit.INCHES);
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity sum = i1.add(f1);
-        assertEquals(new Quantity(14.0, LengthUnit.INCHES), sum);
+        Quantity<LengthUnit> i1 = new Quantity<>(2.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<?> sum = i1.add(f1);
+        assertEquals(new Quantity<>(14.0, LengthUnit.INCHES), sum);
     }
 
     @Test
     public void givenOneFootAndTwelveInches_ShouldReturnTwoFeet() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
-        Quantity sum = f1.add(i1);
-        assertEquals(new Quantity(2.0, LengthUnit.FEET), sum);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(12.0, LengthUnit.INCHES);
+        Quantity<?> sum = f1.add(i1);
+        assertEquals(new Quantity<>(2.0, LengthUnit.FEET), sum);
     }
 
     @Test
     public void givenTwoInchesAndTwoPointFiveFourCm_ShouldReturnThreeInches() {
-        Quantity i1 = new Quantity(2.0, LengthUnit.INCHES);
-        Quantity cm1 = new Quantity(2.54, LengthUnit.CM);
-        Quantity sum = i1.add(cm1);
-        assertEquals(new Quantity(3.0, LengthUnit.INCHES), sum);
+        Quantity<LengthUnit> i1 = new Quantity<>(2.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> cm1 = new Quantity<>(2.54, LengthUnit.CM);
+        Quantity<?> sum = i1.add(cm1);
+        assertEquals(new Quantity<>(3.0, LengthUnit.INCHES), sum);
     }
 
     @Test
     public void givenNullQuantityToAdd_ShouldThrowException() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
         assertThrows(IllegalArgumentException.class, () -> f1.add(null));
     }
 
@@ -234,40 +234,40 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenOneFootAndTwelveInches_ShouldReturnTwoFeet_WhenTargetIsFeet() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
-        Quantity sum = f1.add(i1, LengthUnit.FEET);
-        assertEquals(new Quantity(2.0, LengthUnit.FEET), sum);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(12.0, LengthUnit.INCHES);
+        Quantity<?> sum = f1.add(i1, LengthUnit.FEET);
+        assertEquals(new Quantity<>(2.0, LengthUnit.FEET), sum);
     }
 
     @Test
     public void givenOneFootAndTwelveInches_ShouldReturnTwentyFourInches_WhenTargetIsInches() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
-        Quantity sum = f1.add(i1, LengthUnit.INCHES);
-        assertEquals(new Quantity(24.0, LengthUnit.INCHES), sum);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(12.0, LengthUnit.INCHES);
+        Quantity<?> sum = f1.add(i1, LengthUnit.INCHES);
+        assertEquals(new Quantity<>(24.0, LengthUnit.INCHES), sum);
     }
 
     @Test
     public void givenThirtySixInchesAndOneYard_ShouldReturnSixFeet_WhenTargetIsFeet() {
-        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
-        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
-        Quantity sum = i1.add(y1, LengthUnit.FEET);
-        assertEquals(new Quantity(6.0, LengthUnit.FEET), sum);
+        Quantity<LengthUnit> i1 = new Quantity<>(36.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> y1 = new Quantity<>(1.0, LengthUnit.YARD);
+        Quantity<?> sum = i1.add(y1, LengthUnit.FEET);
+        assertEquals(new Quantity<>(6.0, LengthUnit.FEET), sum);
     }
 
     @Test
     public void givenTwoPointFiveFourCmAndOneInch_ShouldReturnFivePointZeroEightCm_WhenTargetIsCm() {
-        Quantity cm1 = new Quantity(2.54, LengthUnit.CM);
-        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
-        Quantity sum = cm1.add(i1, LengthUnit.CM);
-        assertEquals(new Quantity(5.08, LengthUnit.CM), sum);
+        Quantity<LengthUnit> cm1 = new Quantity<>(2.54, LengthUnit.CM);
+        Quantity<LengthUnit> i1 = new Quantity<>(1.0, LengthUnit.INCHES);
+        Quantity<?> sum = cm1.add(i1, LengthUnit.CM);
+        assertEquals(new Quantity<>(5.08, LengthUnit.CM), sum);
     }
 
     @Test
     public void givenValidQuantities_ShouldThrowException_WhenTargetUnitIsNull() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
+        Quantity<LengthUnit> i1 = new Quantity<>(12.0, LengthUnit.INCHES);
         assertThrows(IllegalArgumentException.class, () -> f1.add(i1, null));
     }
 
@@ -275,59 +275,46 @@ public class QuantityMeasurementTest {
 
     @Test
     public void givenOneKgAndOneKg_ShouldReturnEqual() {
-        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
-        Quantity kg2 = new Quantity(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> kg2 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
         assertEquals(kg1, kg2);
     }
 
     @Test
     public void givenOneKgAndThousandGrams_ShouldReturnEqual() {
-        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
-        Quantity g1 = new Quantity(1000.0, WeightUnit.GRAM);
+        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        Quantity<WeightUnit> g1 = new Quantity<>(1000.0, WeightUnit.GRAM);
         assertEquals(kg1, g1);
     }
 
     @Test
     public void givenOnePound_ShouldReturnApproxKg() {
-        Quantity lb1 = new Quantity(1.0, WeightUnit.POUND);
+        Quantity<WeightUnit> lb1 = new Quantity<>(1.0, WeightUnit.POUND);
         assertEquals(0.454, lb1.convertTo(WeightUnit.KILOGRAM)); // 0.453592 rounded to 3 places
     }
 
     @Test
     public void givenThousandGramsAndOneKg_ShouldReturnTwoKg_WhenTargetIsKg() {
-        Quantity g1 = new Quantity(1000.0, WeightUnit.GRAM);
-        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
-        Quantity sum = g1.add(kg1, WeightUnit.KILOGRAM);
-        assertEquals(new Quantity(2.0, WeightUnit.KILOGRAM), sum);
+        Quantity<WeightUnit> g1 = new Quantity<>(1000.0, WeightUnit.GRAM);
+        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        Quantity<?> sum = g1.add(kg1, WeightUnit.KILOGRAM);
+        assertEquals(new Quantity<>(2.0, WeightUnit.KILOGRAM), sum);
     }
 
     @Test
     public void givenOnePoundAndOnePound_ShouldReturnExpectedKg() {
-        Quantity lb1 = new Quantity(1.0, WeightUnit.POUND);
-        Quantity lb2 = new Quantity(1.0, WeightUnit.POUND);
-        Quantity sum = lb1.add(lb2, WeightUnit.KILOGRAM);
-        assertEquals(new Quantity(0.908, WeightUnit.KILOGRAM), sum);
+        Quantity<WeightUnit> lb1 = new Quantity<>(1.0, WeightUnit.POUND);
+        Quantity<WeightUnit> lb2 = new Quantity<>(1.0, WeightUnit.POUND);
+        Quantity<?> sum = lb1.add(lb2, WeightUnit.KILOGRAM);
+        assertEquals(new Quantity<>(0.908, WeightUnit.KILOGRAM), sum);
     }
 
     // --- Cross Category Boundary Tests ---
 
     @Test
     public void givenOneKgAndOneFoot_ShouldNotBeEqual() {
-        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
+        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
         assertNotEquals(kg1, f1);
-    }
-
-    @Test
-    public void givenOneKgAndOneFoot_ShouldThrowException_OnAdd() {
-        Quantity kg1 = new Quantity(1.0, WeightUnit.KILOGRAM);
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        assertThrows(IllegalArgumentException.class, () -> kg1.add(f1));
-    }
-
-    @Test
-    public void givenLengthUnit_ShouldThrowException_WhenConvertedToWeightUnit() {
-        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
-        assertThrows(IllegalArgumentException.class, () -> f1.convertTo(WeightUnit.KILOGRAM));
     }
 }

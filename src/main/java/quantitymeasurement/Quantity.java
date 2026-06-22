@@ -2,11 +2,11 @@ package quantitymeasurement;
 
 import java.util.Objects;
 
-public class Quantity {
+public class Quantity<U extends IMeasurable> {
     private final double value;
-    private final Unit unit;
+    private final U unit;
 
-    public Quantity(double value, Unit unit) {
+    public Quantity(double value, U unit) {
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("Value must be a finite number");
         }
@@ -17,43 +17,37 @@ public class Quantity {
         this.unit = unit;
     }
 
-    public double convertTo(Unit targetUnit) {
+    public double convertTo(U targetUnit) {
         if (targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null");
-        }
-        if (!this.unit.getClass().equals(targetUnit.getClass())) {
-            throw new IllegalArgumentException("Cannot convert between different measurement categories");
         }
         double baseValue = this.unit.convertToBaseUnit(this.value);
         double convertedValue = targetUnit.convertFromBaseUnit(baseValue);
         return Math.round(convertedValue * 1000.0) / 1000.0;
     }
 
-    public Quantity add(Quantity other) {
+    public Quantity<U> add(Quantity<U> other) {
         return this.add(other, this.unit);
     }
 
-    public Quantity add(Quantity other, Unit targetUnit) {
+    public Quantity<U> add(Quantity<U> other, U targetUnit) {
         if (other == null) {
             throw new IllegalArgumentException("Quantity to add cannot be null");
         }
         if (targetUnit == null) {
             throw new IllegalArgumentException("Target unit cannot be null");
         }
-        if (!this.unit.getClass().equals(other.unit.getClass()) || !this.unit.getClass().equals(targetUnit.getClass())) {
-            throw new IllegalArgumentException("Cannot operate on different measurement categories");
-        }
         double thisConvertedValue = this.convertTo(targetUnit);
         double otherConvertedValue = other.convertTo(targetUnit);
         double sumValue = thisConvertedValue + otherConvertedValue;
-        return new Quantity(Math.round(sumValue * 1000.0) / 1000.0, targetUnit);
+        return new Quantity<>(Math.round(sumValue * 1000.0) / 1000.0, targetUnit);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        Quantity quantity = (Quantity) obj;
+        Quantity<?> quantity = (Quantity<?>) obj;
         if (!this.unit.getClass().equals(quantity.unit.getClass())) {
             return false;
         }
@@ -69,9 +63,6 @@ public class Quantity {
 
     @Override
     public String toString() {
-        if (unit instanceof Enum) {
-            return "Quantity(" + value + ", \"" + ((Enum<?>) unit).name().toLowerCase() + "\")";
-        }
-        return "Quantity(" + value + ", \"" + unit.toString() + "\")";
+        return "Quantity(" + value + ", \"" + unit.getUnitName() + "\")";
     }
 }
