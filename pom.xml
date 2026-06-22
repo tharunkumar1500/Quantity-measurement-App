@@ -41,6 +41,12 @@
                     <mainClass>quantitymeasurement.QuantityMeasurementApp</mainClass>
                 </configuration>
             </plugin>
+            <!-- Surefire Plugin for JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M9</version>
+            </plugin>
         </plugins>
     </build>
 </project>
