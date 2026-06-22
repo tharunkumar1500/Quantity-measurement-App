@@ -30,4 +30,19 @@ public enum VolumeUnit implements IMeasurable {
     public String getUnitName() {
         return this.name().toLowerCase();
     }
+
+    @Override
+    public String getMeasurementType() {
+        return "Volume";
+    }
+
+    @Override
+    public IMeasurable getUnitInstance(String unitName) {
+        for (VolumeUnit unit : VolumeUnit.values()) {
+            if (unit.name().equalsIgnoreCase(unitName) || unit.getUnitName().equalsIgnoreCase(unitName)) {
+                return unit;
+            }
+        }
+        return null;
+    }
 }

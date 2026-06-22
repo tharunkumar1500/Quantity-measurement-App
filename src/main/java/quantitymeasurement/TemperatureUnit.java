@@ -43,4 +43,19 @@ public enum TemperatureUnit implements IMeasurable {
             throw new UnsupportedOperationException("Temperature measurement does not support " + operation);
         }
     }
+
+    @Override
+    public String getMeasurementType() {
+        return "Temperature";
+    }
+
+    @Override
+    public IMeasurable getUnitInstance(String unitName) {
+        for (TemperatureUnit unit : TemperatureUnit.values()) {
+            if (unit.name().equalsIgnoreCase(unitName) || unit.getUnitName().equalsIgnoreCase(unitName)) {
+                return unit;
+            }
+        }
+        return null;
+    }
 }

@@ -1,75 +1,64 @@
 package quantitymeasurement;
 
+import quantitymeasurement.controller.QuantityMeasurementController;
+import quantitymeasurement.entity.QuantityDTO;
+import quantitymeasurement.repository.IQuantityMeasurementRepository;
+import quantitymeasurement.repository.QuantityMeasurementCacheRepository;
+import quantitymeasurement.service.IQuantityMeasurementService;
+import quantitymeasurement.service.QuantityMeasurementServiceImpl;
+
 public class QuantityMeasurementApp {
 
-    public static <U extends IMeasurable> void demonstrateEquality(Quantity<U> q1, Quantity<U> q2) {
-        System.out.println(q1 + " equals " + q2 + ": " + q1.equals(q2));
-    }
-
-    public static <U extends IMeasurable> void demonstrateAddition(Quantity<U> q1, Quantity<U> q2, U targetUnit) {
-        Quantity<U> sum = q1.add(q2, targetUnit);
-        System.out.println(q1 + " + " + q2 + " to " + targetUnit.getUnitName() + " = " + sum);
-    }
-
-    public static <U extends IMeasurable> void demonstrateSubtraction(Quantity<U> q1, Quantity<U> q2, U targetUnit) {
-        Quantity<U> diff = q1.subtract(q2, targetUnit);
-        System.out.println(q1 + " - " + q2 + " to " + targetUnit.getUnitName() + " = " + diff);
-    }
-
-    public static <U extends IMeasurable> void demonstrateDivision(Quantity<U> q1, Quantity<U> q2) {
-        double result = q1.divide(q2);
-        System.out.println(q1 + " / " + q2 + " = " + result);
-    }
-
     public static void main(String[] args) {
-        System.out.println("Welcome to Quantity Measurement App!");
-        
-        System.out.println("\n--- Generic Quantity Equality ---");
-        Quantity<LengthUnit> f1 = new Quantity<>(1.0, LengthUnit.FEET);
-        Quantity<LengthUnit> i1 = new Quantity<>(12.0, LengthUnit.INCHES);
-        demonstrateEquality(f1, i1);
+        System.out.println("Welcome to Quantity Measurement App (N-Tier Architecture)!");
 
-        Quantity<WeightUnit> kg1 = new Quantity<>(1.0, WeightUnit.KILOGRAM);
-        Quantity<WeightUnit> g1 = new Quantity<>(1000.0, WeightUnit.GRAM);
-        demonstrateEquality(kg1, g1);
+        // Dependency Injection
+        IQuantityMeasurementRepository repository = new QuantityMeasurementCacheRepository();
+        IQuantityMeasurementService service = new QuantityMeasurementServiceImpl(repository);
+        QuantityMeasurementController controller = new QuantityMeasurementController(service);
+
+        System.out.println("\n--- Generic Quantity Equality ---");
+        QuantityDTO q1 = new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET);
+        QuantityDTO q2 = new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES);
+        controller.demonstrateEquality(q1, q2);
+
+        QuantityDTO q3 = new QuantityDTO(1.0, QuantityDTO.WeightUnit.KILOGRAM);
+        QuantityDTO q4 = new QuantityDTO(1000.0, QuantityDTO.WeightUnit.GRAM);
+        controller.demonstrateEquality(q3, q4);
 
         System.out.println("\n--- Generic Quantity Addition ---");
-        Quantity<LengthUnit> cm1 = new Quantity<>(2.54, LengthUnit.CM);
-        Quantity<LengthUnit> i2 = new Quantity<>(2.0, LengthUnit.INCHES);
-        demonstrateAddition(i2, cm1, LengthUnit.INCHES);
+        QuantityDTO q5 = new QuantityDTO(2.0, QuantityDTO.LengthUnit.INCHES);
+        QuantityDTO q6 = new QuantityDTO(2.54, QuantityDTO.LengthUnit.CM);
+        controller.demonstrateAddition(q5, q6, QuantityDTO.LengthUnit.INCHES);
 
-        Quantity<WeightUnit> lb1 = new Quantity<>(1.0, WeightUnit.POUND);
-        Quantity<WeightUnit> lb2 = new Quantity<>(1.0, WeightUnit.POUND);
-        demonstrateAddition(lb1, lb2, WeightUnit.KILOGRAM);
+        QuantityDTO q7 = new QuantityDTO(1.0, QuantityDTO.WeightUnit.POUND);
+        QuantityDTO q8 = new QuantityDTO(1.0, QuantityDTO.WeightUnit.POUND);
+        controller.demonstrateAddition(q7, q8, QuantityDTO.WeightUnit.KILOGRAM);
 
         System.out.println("\n--- Volume Demonstration (UC11) ---");
-        Quantity<VolumeUnit> l1 = new Quantity<>(1.0, VolumeUnit.LITRE);
-        Quantity<VolumeUnit> ml1 = new Quantity<>(1000.0, VolumeUnit.MILLILITRE);
-        demonstrateEquality(l1, ml1);
+        QuantityDTO v1 = new QuantityDTO(1.0, QuantityDTO.VolumeUnit.LITRE);
+        QuantityDTO v2 = new QuantityDTO(1000.0, QuantityDTO.VolumeUnit.MILLILITRE);
+        controller.demonstrateEquality(v1, v2);
 
-        Quantity<VolumeUnit> gal1 = new Quantity<>(1.0, VolumeUnit.GALLON);
-        Quantity<VolumeUnit> l2 = new Quantity<>(3.785, VolumeUnit.LITRE);
-        demonstrateAddition(gal1, l2, VolumeUnit.GALLON);
+        QuantityDTO v3 = new QuantityDTO(1.0, QuantityDTO.VolumeUnit.GALLON);
+        QuantityDTO v4 = new QuantityDTO(3.785, QuantityDTO.VolumeUnit.LITRE);
+        controller.demonstrateAddition(v3, v4, QuantityDTO.VolumeUnit.GALLON);
 
         System.out.println("\n--- Subtraction & Division (UC12) ---");
-        Quantity<LengthUnit> f2 = new Quantity<>(10.0, LengthUnit.FEET);
-        Quantity<LengthUnit> i3 = new Quantity<>(6.0, LengthUnit.INCHES);
-        demonstrateSubtraction(f2, i3, LengthUnit.FEET);
+        QuantityDTO f1 = new QuantityDTO(10.0, QuantityDTO.LengthUnit.FEET);
+        QuantityDTO f2 = new QuantityDTO(6.0, QuantityDTO.LengthUnit.INCHES);
+        controller.demonstrateSubtraction(f1, f2, QuantityDTO.LengthUnit.FEET);
 
-        Quantity<WeightUnit> kg2 = new Quantity<>(10.0, WeightUnit.KILOGRAM);
-        Quantity<WeightUnit> kg3 = new Quantity<>(5.0, WeightUnit.KILOGRAM);
-        demonstrateDivision(kg2, kg3);
+        QuantityDTO kg2 = new QuantityDTO(10.0, QuantityDTO.WeightUnit.KILOGRAM);
+        QuantityDTO kg3 = new QuantityDTO(5.0, QuantityDTO.WeightUnit.KILOGRAM);
+        controller.demonstrateDivision(kg2, kg3);
 
-        System.out.println("\n--- Temperature Demonstration (UC14) ---");
-        Quantity<TemperatureUnit> c1 = new Quantity<>(0.0, TemperatureUnit.CELSIUS);
-        Quantity<TemperatureUnit> f4 = new Quantity<>(32.0, TemperatureUnit.FAHRENHEIT);
-        demonstrateEquality(c1, f4);
+        System.out.println("\n--- Temperature Demonstration (UC14/UC15) ---");
+        QuantityDTO c1 = new QuantityDTO(0.0, QuantityDTO.TemperatureUnit.CELSIUS);
+        QuantityDTO f4 = new QuantityDTO(32.0, QuantityDTO.TemperatureUnit.FAHRENHEIT);
+        controller.demonstrateEquality(c1, f4);
 
         System.out.println("Attempting unsupported operation (Addition on Temperature)...");
-        try {
-            c1.add(f4);
-        } catch (UnsupportedOperationException e) {
-            System.out.println("Caught Expected Exception: " + e.getMessage());
-        }
+        controller.demonstrateAddition(c1, f4, QuantityDTO.TemperatureUnit.CELSIUS);
     }
 }

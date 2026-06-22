@@ -11,4 +11,7 @@ public interface IMeasurable {
     default void validateOperationSupport(String operation) {
         // By default, units support all operations.
     }
+
+    String getMeasurementType();
+    IMeasurable getUnitInstance(String unitName);
 }
