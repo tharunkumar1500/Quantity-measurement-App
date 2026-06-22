@@ -2,16 +2,36 @@ package com.app.quantitymeasurement.entity;
 
 import java.io.Serializable;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "quantity_measurement_history")
 public class QuantityMeasurementEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Transient
     private QuantityDTO operand1;
+
+    @Transient
     private QuantityDTO operand2;
+
+    @Column(name = "operation_type")
     private String operationType;
+
+    @Column(name = "result")
     private String result;
+
+    @Column(name = "has_error")
     private boolean hasError;
+
+    @Column(name = "error_message")
     private String errorMessage;
+
+    @Column(name = "measurement_type")
     private String measurementType;
 
     public QuantityMeasurementEntity() {}

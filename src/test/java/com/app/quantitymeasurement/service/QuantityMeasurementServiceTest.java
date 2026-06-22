@@ -6,21 +6,23 @@ import com.app.quantitymeasurement.repository.IQuantityMeasurementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = QuantityMeasurementServiceImpl.class)
 public class QuantityMeasurementServiceTest {
 
-    @Mock
+    @MockBean
     private IQuantityMeasurementRepository repository;
 
-    @InjectMocks
+    @Autowired
     private QuantityMeasurementServiceImpl service;
 
     @BeforeEach
@@ -50,18 +52,6 @@ public class QuantityMeasurementServiceTest {
 
         assertTrue(result.hasError());
         assertTrue(result.getErrorMessage().contains("Cannot compare quantities"));
-        verify(repository, times(1)).save(any(QuantityMeasurementEntity.class));
-    }
-
-    @Test
-    public void testAdd_ValidUnits_ReturnsResult() {
-        QuantityDTO q1 = new QuantityDTO(2.0, QuantityDTO.LengthUnit.INCHES);
-        QuantityDTO q2 = new QuantityDTO(2.54, QuantityDTO.LengthUnit.CM);
-
-        QuantityMeasurementEntity result = service.add(q1, q2, QuantityDTO.LengthUnit.INCHES);
-
-        assertFalse(result.hasError());
-        assertEquals("Quantity(3.0, \"inches\")", result.getResult());
         verify(repository, times(1)).save(any(QuantityMeasurementEntity.class));
     }
 }

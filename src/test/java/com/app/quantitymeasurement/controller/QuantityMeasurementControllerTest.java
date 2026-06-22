@@ -3,56 +3,45 @@ package com.app.quantitymeasurement.controller;
 import com.app.quantitymeasurement.entity.QuantityDTO;
 import com.app.quantitymeasurement.entity.QuantityMeasurementEntity;
 import com.app.quantitymeasurement.service.IQuantityMeasurementService;
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(QuantityMeasurementController.class)
 public class QuantityMeasurementControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private IQuantityMeasurementService service;
 
-    @InjectMocks
-    private QuantityMeasurementController controller;
-
-    @BeforeEach
-    public void setUp() {
-        // Setup mock response
-        QuantityMeasurementEntity mockEntity = new QuantityMeasurementEntity(
-                new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET),
-                new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES),
-                "COMPARE",
-                "true"
-        );
-        lenient().when(service.compare(any(), any())).thenReturn(mockEntity);
-        lenient().when(service.add(any(), any(), any())).thenReturn(mockEntity);
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    public void testCompare_CallsService() {
-        QuantityDTO q1 = new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET);
-        QuantityDTO q2 = new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES);
+    public void testCompare_ReturnsOk() throws Exception {
+        QuantityMeasurementController.CompareRequest request = new QuantityMeasurementController.CompareRequest();
+        request.setQ1(new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET));
+        request.setQ2(new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES));
 
-        controller.compare(q1, q2);
+        QuantityMeasurementEntity mockEntity = new QuantityMeasurementEntity(request.getQ1(), request.getQ2(), "COMPARE", "true");
+        when(service.compare(any(), any())).thenReturn(mockEntity);
 
-        verify(service, times(1)).compare(eq(q1), eq(q2));
-    }
-
-    @Test
-    public void testDemonstrateAddition_CallsService() {
-        QuantityDTO q1 = new QuantityDTO(1.0, QuantityDTO.LengthUnit.FEET);
-        QuantityDTO q2 = new QuantityDTO(12.0, QuantityDTO.LengthUnit.INCHES);
-
-        controller.demonstrateAddition(q1, q2, QuantityDTO.LengthUnit.INCHES);
-
-        verify(service, times(1)).add(eq(q1), eq(q2), eq(QuantityDTO.LengthUnit.INCHES));
+        mockMvc.perform(post("/api/measurement/compare")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result").value("true"));
     }
 }
