@@ -46,12 +46,20 @@ public class QuantityMeasurementApp {
         }
 
         public Quantity add(Quantity other) {
+            return this.add(other, this.unit);
+        }
+
+        public Quantity add(Quantity other, LengthUnit targetUnit) {
             if (other == null) {
                 throw new IllegalArgumentException("Quantity to add cannot be null");
             }
-            double otherConvertedValue = other.convertTo(this.unit);
-            double sumValue = this.value + otherConvertedValue;
-            return new Quantity(Math.round(sumValue * 1000.0) / 1000.0, this.unit);
+            if (targetUnit == null) {
+                throw new IllegalArgumentException("Target unit cannot be null");
+            }
+            double thisConvertedValue = this.convertTo(targetUnit);
+            double otherConvertedValue = other.convertTo(targetUnit);
+            double sumValue = thisConvertedValue + otherConvertedValue;
+            return new Quantity(Math.round(sumValue * 1000.0) / 1000.0, targetUnit);
         }
 
         @Override

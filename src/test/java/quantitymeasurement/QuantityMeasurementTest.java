@@ -232,4 +232,45 @@ public class QuantityMeasurementTest {
         Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
         assertThrows(IllegalArgumentException.class, () -> f1.add(null));
     }
+
+    // --- Target Unit Addition Tests (UC7) ---
+
+    @Test
+    public void givenOneFootAndTwelveInches_ShouldReturnTwoFeet_WhenTargetIsFeet() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
+        Quantity sum = f1.add(i1, LengthUnit.FEET);
+        assertEquals(new Quantity(2.0, LengthUnit.FEET), sum);
+    }
+
+    @Test
+    public void givenOneFootAndTwelveInches_ShouldReturnTwentyFourInches_WhenTargetIsInches() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
+        Quantity sum = f1.add(i1, LengthUnit.INCHES);
+        assertEquals(new Quantity(24.0, LengthUnit.INCHES), sum);
+    }
+
+    @Test
+    public void givenThirtySixInchesAndOneYard_ShouldReturnSixFeet_WhenTargetIsFeet() {
+        Quantity i1 = new Quantity(36.0, LengthUnit.INCHES);
+        Quantity y1 = new Quantity(1.0, LengthUnit.YARD);
+        Quantity sum = i1.add(y1, LengthUnit.FEET);
+        assertEquals(new Quantity(6.0, LengthUnit.FEET), sum);
+    }
+
+    @Test
+    public void givenTwoPointFiveFourCmAndOneInch_ShouldReturnFivePointZeroEightCm_WhenTargetIsCm() {
+        Quantity cm1 = new Quantity(2.54, LengthUnit.CM);
+        Quantity i1 = new Quantity(1.0, LengthUnit.INCHES);
+        Quantity sum = cm1.add(i1, LengthUnit.CM);
+        assertEquals(new Quantity(5.08, LengthUnit.CM), sum);
+    }
+
+    @Test
+    public void givenValidQuantities_ShouldThrowException_WhenTargetUnitIsNull() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity i1 = new Quantity(12.0, LengthUnit.INCHES);
+        assertThrows(IllegalArgumentException.class, () -> f1.add(i1, null));
+    }
 }
