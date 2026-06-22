@@ -3,9 +3,6 @@ package quantitymeasurement;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import quantitymeasurement.QuantityMeasurementApp.Quantity;
-import quantitymeasurement.QuantityMeasurementApp.LengthUnit;
-
 public class QuantityMeasurementTest {
 
     // --- Base Equality Tests ---

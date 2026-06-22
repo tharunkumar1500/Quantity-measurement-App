@@ -1,10 +1,11 @@
-# Quantity Measurement Application (UC7) - Addition with Target Unit Specification
+# Quantity Measurement Application (UC8) - Refactoring Unit Enum to Standalone
 
-This project implements the seventh use case of the Quantity Measurement Application. Building upon the previous use cases, it introduces the ability to perform arithmetic operations where the target unit for the result is explicitly specified by the caller, instead of defaulting to the first operand's unit.
+This project implements the eighth use case of the Quantity Measurement Application. It focuses on an architectural refactoring to eliminate inner classes, resolve Single Responsibility Principle (SRP) violations, and establish a scalable structure for future measurement categories.
 
 ## Features
-- **Generic Quantity Class**: A unified `Quantity` class to represent any measurement with a value and a unit type.
-- **Extended Unit Support**: The `LengthUnit` Enum supports `FEET`, `INCHES`, `YARD`, and `CM`.
+- **Standalone Unit Enum**: `LengthUnit` is now a standalone enum that fully encapsulates base unit conversion logic.
+- **Standalone Quantity Class**: The `Quantity` class is now a top-level entity that delegates conversion operations to the unit class, making it loosely coupled.
+- **Extended Unit Support**: Supports `FEET`, `INCHES`, `YARD`, and `CM`.
 - **Unit Conversion API**: Includes `convertTo(LengthUnit targetUnit)` for explicit conversions.
 - **Arithmetic Operations (Addition)**: 
   - `add(Quantity other)`: Adds two units and returns the result in the unit of the first operand.
@@ -40,20 +41,22 @@ Quantity(36.0, "inches") + Quantity(1.0, "yards") to "feet" = Quantity(6.0, "fee
 
 ## Code Explanation
 
-### `QuantityMeasurementApp.java`
-Contains the `LengthUnit` Enum and `Quantity` class with the following:
+### `LengthUnit.java`
+A standalone Enum managing the length units:
 - `LengthUnit`: Manages the conversion factor relative to the base unit for Feet, Inches, Yards, and CM.
+- `convertToBaseUnit(double value)` & `convertFromBaseUnit(double baseValue)`: Encapsulates all mathematical conversion responsibility securely inside the Enum.
+
+### `Quantity.java`
+A standalone Class representing the mathematical model:
 - `Quantity` constructor: Validates inputs (throws `IllegalArgumentException` on NaN, Infinity, or null unit).
-- `Quantity.convertTo(LengthUnit targetUnit)`: Converts the measurement to the specified target unit and returns the precise `double` numeric value.
-- `Quantity.add(...)`: Overloaded methods to handle summation with and without an explicit target unit, returning an immutable `Quantity` object.
-- `Quantity.equals(Object obj)` method: Handles references, null checks, type checks, and precise floating-point comparison using base unit conversion logic.
+- `convertTo(LengthUnit targetUnit)`: Delegates base unit arithmetic to `LengthUnit` and returns the precise `double` numeric value.
+- `add(...)`: Overloaded methods to handle summation with and without an explicit target unit, returning an immutable `Quantity` object.
+- `equals(Object obj)` method: Handles references, null checks, type checks, and precise floating-point comparison.
 
 ### `QuantityMeasurementTest.java`
 JUnit 5 tests verifying:
-- **Target Unit Addition Tests (UC7)**: Tests summation with an explicit output unit:
-  - 1 Foot + 12 Inches to INCHES -> 24.0 Inches
-  - 36 Inches + 1 Yard to FEET -> 6.0 Feet
-  - 2.54 CM + 1 Inch to CM -> 5.08 CM
+- **Refactored APIs**: Proves 100% backward compatibility of previous test logic with the new standalone classes.
+- **Target Unit Addition Tests (UC7)**: Tests summation with an explicit output unit.
 - **Addition Tests (UC6)**: Tests basic summation logic.
 - **Validation Tests**: Ensures constructors and methods reject invalid states (`null`, `NaN`, `Infinity`).
 - **Conversion Tests**: Tests explicit numeric conversion.
